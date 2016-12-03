@@ -49,6 +49,13 @@ SOFTWARE.
 **
 **===========================================================================
 */
+
+void ADC1_IRQHandler(void){		//handler k ADC
+	if (ADC1->SR & ADC_SR_EOC) {
+		klavesnica = ADC1->DR;
+		}
+}
+
 int main(void)
 {
 	initSPI2();
@@ -62,16 +69,7 @@ int main(void)
 
 	while (1)
 	{
-	  if ((klavesnica >= 1952) && (klavesnica <= 2100)){
-		  posunSipkyHore();
-	  }
-	  if ((klavesnica >= 3400) && (klavesnica <= 3420)){
-		  initMenu();
-	  }
-	  if ((klavesnica >= 3630) && (klavesnica <= 3690)){
-		  posunSipkyDole();
-	  }
-	  Delay(30);
+		pohybMenu(klavesnica);
 	}
 	return 0;
 }

@@ -23,5 +23,11 @@ void adc_init(void);
 void initGPIO();
 void posunSipkyDole();
 void posunSipkyHore();
+void pohybMenu(uint16_t);
+void otvorInfo();
+void otvorRevers();
+void otvorExpo();
+void otvorMix();
+void otvorEPA();
 
 #endif /* TEST1_H_ */

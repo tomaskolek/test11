@@ -18,6 +18,38 @@ void Delay(uint16_t n)
 	return;
 }
 
+void pohybMenu(uint16_t klavesnica){
+
+	  if ((klavesnica >= 1952) && (klavesnica <= 2100)){
+		  posunSipkyHore();
+	  }
+	  else if ((klavesnica >= 2800) && (klavesnica <= 2940)){
+		  switch(aktualneA){
+		  case 12:
+			  otvorInfo();
+		  case 32:
+			  otvorRevers();
+		  case 52:
+			  otvorExpo();
+		  case 72:
+			 otvorMix();
+		  case 92:
+			  otvorEPA();
+		  }
+	  }
+	  else if ((klavesnica >= 3440) && (klavesnica <= 3480)){
+		  lcdClearDisplay(decodeRgbValue(255, 255, 255));
+		  lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
+		  lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
+		  lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF); 		//aktualneA 52, aktualneB 67
+		  lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF); 		//aktualneA 72, aktualneB 87
+		  lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF); 		//aktualneA 92, aktualneB 107
+		  lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
+	  }
+	  else if ((klavesnica >= 3630) && (klavesnica <= 3690)){
+		  posunSipkyDole();
+	  }
+}
 
 void posunSipkyDole(){
 	if (aktualneA == 0){
@@ -69,11 +101,11 @@ void initMenu(){
 
 	lcdInitialise(LCD_ORIENTATION2);
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
-	lcdPutS("Info", 20, 17, 0x0000, 0xFFFF);
-	lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF);
-	lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF);
-	lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF);
-	lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF);
+	  lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
+	  lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
+	  lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF); 		//aktualneA 52, aktualneB 67
+	  lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF); 		//aktualneA 72, aktualneB 87
+	  lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF); 		//aktualneA 92, aktualneB 107
 	lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(0, 0, 0));
 }
 
@@ -129,8 +161,3 @@ void nvic_init(){			// inicializacia prerusenia pre ADC a USART2
 	USART_Cmd(USART2, ENABLE);
 }
 
-void ADC1_IRQHandler(void){		//handler k ADC
-	if (ADC1->SR & ADC_SR_EOC) {
-		klavesnica = ADC1->DR;
-		}
-}
