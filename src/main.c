@@ -50,15 +50,30 @@ SOFTWARE.
 **===========================================================================
 */
 
-void ADC1_IRQHandler(void){		//handler k ADC
+/*void ADC1_IRQHandler(void){		//handler k ADC
 	if (ADC1->SR & ADC_SR_EOC) {
 		klavesnica = ADC1->DR;
 		}
+}*/
+
+void DMA1_Channel1_IRQHandler(void)
+{
+  if (DMA_GetITStatus(DMA1_IT_TC1))
+  {
+	  klavesnica = ADC1ConvertedValue[4];
+	  hodnota1 = ADC1ConvertedValue[0];
+	  hodnota2 = ADC1ConvertedValue[1];
+	  hodnota3 = ADC1ConvertedValue[2];
+	  hodnota4 = ADC1ConvertedValue[3];
+
+	  DMA_ClearITPendingBit(DMA1_IT_TC1);
+  }
 }
 
 int main(void)
 {
 	initSPI2();
+	dma_init();
 	initGPIO();
 	initCD_Pin();
 	initCS_Pin();
@@ -66,10 +81,10 @@ int main(void)
 	initMenu();
 	adc_init();
 	nvic_init();
-
 	while (1)
 	{
 		pohybMenu(klavesnica);
+		//Delay(50);
 	}
 	return 0;
 }

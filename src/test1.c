@@ -118,6 +118,8 @@ void initGPIO(){			// inicalizujem GPIO piny
 
   	GPIO_InitTypeDef GPIO_InitStructure;
 
+  	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
   	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
   	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 ;
   	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
@@ -125,9 +127,37 @@ void initGPIO(){			// inicalizujem GPIO piny
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
   		/////
   	GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_4;// PA0, PA1, PA2
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;//The pins are configured in analog mode
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;//We don't need any pull up or pull down
+	GPIO_Init(GPIOA, &GPIO_InitStructure);//Initialize GPIOC pins with the configuration
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;//PB1
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;//The pins are configured in analog mode
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;//We don't need any pull up or pull down
+	GPIO_Init(GPIOB, &GPIO_InitStructure);//Initialize GPIOA pins with the configuration
+
   	RCC_HSICmd(ENABLE);
   	while(RCC_GetFlagStatus(RCC_FLAG_HSIRDY) == RESET);
 
+}
+
+void dma_init(){
+	DMA_InitTypeDef       DMA_InitStruct;
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+	/* DMA1 Stream0 channel0 configuration **************************************/
+	DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)&ADC1->DR;//ADC1's data register
+	DMA_InitStruct.DMA_MemoryBaseAddr = (uint32_t)&ADC1ConvertedValue[0];
+	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralSRC;
+	DMA_InitStruct.DMA_BufferSize = 5;
+	DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+	DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;
+	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;//Reads 16 bit values
+	DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;//Stores 16 bit values
+	DMA_InitStruct.DMA_Mode = DMA_Mode_Circular;
+	DMA_InitStruct.DMA_Priority = DMA_Priority_High;
+	DMA_Init(DMA1_Channel1, &DMA_InitStruct);
+	DMA_Cmd(DMA1_Channel1, ENABLE); //Enable the DMA1 - Channel1
 }
 
 void adc_init(void)			// inicalizujem ADC
@@ -139,14 +169,24 @@ void adc_init(void)			// inicalizujem ADC
   	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
   	ADC_StructInit(&ADC_InitStructure);
   	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+  	ADC_InitStructure.ADC_ScanConvMode = ENABLE;//The scan is configured in multiple channels
   	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
   	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
   	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-  	ADC_InitStructure.ADC_NbrOfConversion = 1;
+  	ADC_InitStructure.ADC_NbrOfConversion = 5;
+  	ADC_InitStructure.ADC_ExternalTrigConv = 0;
   	ADC_Init(ADC1, &ADC_InitStructure);
-  	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_16Cycles);
+  	ADC_RegularChannelConfig(ADC1, ADC_Channel_0, 1, ADC_SampleTime_9Cycles);//PC0
+  	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 2, ADC_SampleTime_9Cycles);
+  	ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 3, ADC_SampleTime_9Cycles);
+  	ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 4, ADC_SampleTime_9Cycles);
+  	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 5, ADC_SampleTime_9Cycles);
   	ADC_Cmd(ADC1, ENABLE);
   	ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
+  	/* Enable DMA request after last transfer (Single-ADC mode) */
+  	ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
+  	/* Enable ADC1 DMA */
+	ADC_DMACmd(ADC1, ENABLE);
   	/*ADC_ITConfig(ADC1,ADC_IT_OVR,ENABLE);
 	ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC);
 	ADC_GetFlagStatus(ADC1, ADC_FLAG_OVR);*/
@@ -154,15 +194,18 @@ void adc_init(void)			// inicalizujem ADC
   	ADC_SoftwareStartConv(ADC1);
   }
 
-void nvic_init(){			// inicializacia prerusenia pre ADC a USART2
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+void nvic_init(){			// inicializacia prerusenia pre ADC
+	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
 	NVIC_InitTypeDef NVIC_InitStructure;
-	NVIC_InitStructure.NVIC_IRQChannel = ADC1_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+	//NVIC_InitStructure.NVIC_IRQChannel = ADC1_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel1_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-	USART_Cmd(USART2, ENABLE);
+    DMA_ITConfig(DMA1_Channel1, DMA_IT_TC, ENABLE);
+    DMA_Cmd(DMA1_Channel1, ENABLE);
+    ADC_DMACmd(ADC1, ENABLE);
+
 }
 
