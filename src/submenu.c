@@ -21,6 +21,10 @@ void otvorInfo(){
 void otvorRevers(){
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("Otvoril som Revers",23, 17, 0x0000, 0xFFFF);
+
+	lcdCircle(64, 84, 22, decodeRgbValue(31, 0, 0));
+	lcdCircle(64, 84, 30, decodeRgbValue(0, 31, 0));
+	lcdCircle(64, 84, 38, decodeRgbValue(0, 0, 31));
 }
 
 void otvorExpo(){

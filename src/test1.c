@@ -24,16 +24,19 @@ void pohybMenu(uint16_t klavesnica){
 		  posunSipkyHore();
 	  }
 	  else if ((klavesnica >= 2800) && (klavesnica <= 2940)){
-		  switch(aktualneA){
-		  case 12:
+		  if (aktualneA == 12){
 			  otvorInfo();
-		  case 32:
+		  }
+		  else if (aktualneA == 32){
 			  otvorRevers();
-		  case 52:
+		  }
+		  else if (aktualneA == 52){
 			  otvorExpo();
-		  case 72:
-			 otvorMix();
-		  case 92:
+		  }
+		  else if (aktualneA == 72){
+			  otvorMix();
+		  }
+		  else if (aktualneA == 92){
 			  otvorEPA();
 		  }
 	  }
@@ -53,10 +56,10 @@ void pohybMenu(uint16_t klavesnica){
 
 void posunSipkyDole(){
 	if (aktualneA == 0){
-		aktualneA = defaultA;
-		aktualneB = defaultB;
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));
-		lcdPlnyTrojuholnik(5, aktualneA + 20, aktualneB + 20, decodeRgbValue(0, 0, 0));
+		lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(31, 31, 31));
+		aktualneA = defaultA + 20;
+		aktualneB = defaultB + 20;
+		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
 	}
 	else if (aktualneB >= 100){
 		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));
