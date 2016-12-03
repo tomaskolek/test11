@@ -14,11 +14,13 @@
 
 
 void otvorInfo(){
+	subMenu = 1;
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("Otvoril som Info",23, 17, 0x0000, 0xFFFF);
 }
 
 void otvorRevers(){
+	subMenu = 1;
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("Otvoril som Revers",23, 17, 0x0000, 0xFFFF);
 
@@ -28,16 +30,19 @@ void otvorRevers(){
 }
 
 void otvorExpo(){
+	subMenu = 1;
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("Otvoril som Expo",23, 17, 0x0000, 0xFFFF);
 }
 
 void otvorMix(){
+	subMenu = 1;
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("Otvoril som Mix",23, 17, 0x0000, 0xFFFF);
 }
 
 void otvorEPA(){
+	subMenu = 1;
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("Otvoril som EPA",23, 17, 0x0000, 0xFFFF);
 }

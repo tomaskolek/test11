@@ -15,6 +15,7 @@ int16_t defaultA;
 int16_t defaultB;
 int16_t aktualneA;
 int16_t aktualneB;
+int subMenu;
 
 void initMenu();
 void Delay(uint16_t n);
