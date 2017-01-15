@@ -56,7 +56,7 @@ SOFTWARE.
 		}
 }*/
 
-void DMA1_Channel1_IRQHandler(void) 	//ked dojde k preruseniu, hodnoty z ADC sa ulozia pomocou DMA do pola ADC1ConvertedValue
+void DMA1_Channel1_IRQHandler(void)
 {
   if (DMA_GetITStatus(DMA1_IT_TC1))
   {
@@ -66,24 +66,24 @@ void DMA1_Channel1_IRQHandler(void) 	//ked dojde k preruseniu, hodnoty z ADC sa 
 	  plyn = ADC1ConvertedValue[2];
 	  smerovka = ADC1ConvertedValue[3];
 
-	  DMA_ClearITPendingBit(DMA1_IT_TC1);   //mazanie bitu, ktory hovori, ze prenos dat bol ukonceny
+	  DMA_ClearITPendingBit(DMA1_IT_TC1);
   }
 }
 
 int main(void)
 {
-	initSPI2();  //inicializujem zbernicu SPI
-	dma_init();	 //inicializujem DMA
-	initGPIO();  //Inicializujem GPIO
-	initCD_Pin();  //
+	initSPI2();
+	dma_init();
+	initGPIO();
+	initCD_Pin();
 	initCS_Pin();
 	initRES_Pin();
-	initMenu();  //inicializujem uvodne menu
-	adc_init(); //inicializujem ADC
-	nvic_init();  //inicializujem NVIC
+	initMenu();
+	adc_init();
+	nvic_init();
 	while (1)
 	{
-		pohybMenu(klavesnica);  //funkcia, ktora sleduje zvolenu polozku v menu, podla toho sa spustaju jednotlive submenu
+		pohybMenu(klavesnica);
 		//Delay(50);
 	}
 	return 0;

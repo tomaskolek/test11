@@ -208,7 +208,7 @@ void otvorEPA(){
 	lcdPutS("EPA",23, 17, 0x0000, 0xFFFF);
 }
 
-char * prevodNaChar(uint16_t hodnota){  //funkcia prevadza cislo na char, vracia pole znakov
+char * prevodNaChar(uint16_t hodnota){
 	static char str[4];
 	int c1 = hodnota/1000;
 	int c2 = (hodnota-(1000*c1))/100;

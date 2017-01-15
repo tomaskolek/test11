@@ -62,7 +62,7 @@ char *FloatToStringReverz(float NORM){
 
 }
 
-void otvorInfo(){ //funkcia, ktora po vyvolani zobrazi jednotlive kanaly, hodnoty su normalizovane, rozsah -1 az 1
+void otvorInfo(){ //funkcia, ktora po vyvolani zobrazi jednotlive kanaly
 	subMenu = 1;
 	char str[5];
 	lcdClearDisplay(decodeRgbValue(255, 255, 255)); //"vycisti display"
@@ -73,7 +73,7 @@ void otvorInfo(){ //funkcia, ktora po vyvolani zobrazi jednotlive kanaly, hodnot
 	lcdPutS("HODNOTY KANALOV",23, 17, 0x0000, 0xFFFF); //zobrazi na LCD
 
 	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX); //normalizovanie hodnoty z analogu
-	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM)); //prevod cisla na char
+	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM));
 	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);	//vypis na displej
 
 	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
@@ -208,7 +208,7 @@ void otvorEPA(){
 	lcdPutS("EPA",23, 17, 0x0000, 0xFFFF);
 }
 
-char * prevodNaChar(uint16_t hodnota){  //funkcia prevadza cislo na char, vracia pole znakov
+char * prevodNaChar(uint16_t hodnota){
 	static char str[4];
 	int c1 = hodnota/1000;
 	int c2 = (hodnota-(1000*c1))/100;

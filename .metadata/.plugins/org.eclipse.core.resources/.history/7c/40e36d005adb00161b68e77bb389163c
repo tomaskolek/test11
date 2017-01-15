@@ -65,32 +65,32 @@ void posunSipkyDole(){  //posuvanie trojuholniku po displeju smerom dole, aktivn
 		aktualneB = defaultB + 20;
 		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));  //nakresli sa rovnoramenny trojuholnik na novu poziciu
 	}
-	else if (aktualneB >= 100){  //ak je trojuholnik na konci displeja tak sa vykresli hore k prvej polozke v menu
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));  //funkcia, ktora vymaze trojuholnik
-		lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(0, 0, 0)); //nakresli sa rovnoramenny trojuholnik na novu poziciu
+	else if (aktualneB >= 100){
+		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));
+		lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(0, 0, 0));
 		aktualneA = defaultA;
 		aktualneB = defaultB;
 	}
 	else{
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));  //funkcia, ktora vymaze trojuholnik
+		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));
 		aktualneA = aktualneA + 20;
 		aktualneB = aktualneB + 20;
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));  //nakresli sa rovnoramenny trojuholnik na novu poziciu
+		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
 	}
 }
 
-void posunSipkyHore(){   //posuvanie trojuholniku po displeju smerom hore, aktivne len pri stlaceni sipky hore na klavesnici
+void posunSipkyHore(){
 	if (aktualneA == 0){
-		lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(31, 31, 31)); //funkcia, ktora vymaze trojuholnik
+		lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(31, 31, 31));
 		aktualneA = 92;
 		aktualneB = 107;
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));   //nakresli sa rovnoramenny trojuholnik na novu poziciu
+		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
 	}
-	else if (aktualneB <= 30){ //ak sa uzivatel pohne sipkou smerom nahor, tak sa sipka nakresli k poslednej polozke v menu
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));  //funkcia, ktora vymaze trojuholnik
+	else if (aktualneB <= 30){
+		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));
 		aktualneA = 92;
 		aktualneB = 107;
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));   //nakresli sa rovnoramenny trojuholnik na novu poziciu
+		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
 	}
 	else{
 		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(31, 31, 31));
@@ -100,20 +100,20 @@ void posunSipkyHore(){   //posuvanie trojuholniku po displeju smerom hore, aktiv
 	}
 
 }
-void initMenu(){  //zobrazi sa hlavne menu a vypisu sa polozky
+void initMenu(){
 	defaultA = 12;
 	defaultB = 27;
 	aktualneA = 0;
 	aktualneB = 0;
 	subMenu = 0;
-	lcdInitialise(LCD_ORIENTATION2); //menim orientaciu displeja
-	lcdClearDisplay(decodeRgbValue(255, 255, 255));  //mazem obrazovku a nastavim biele pozadie
+	lcdInitialise(LCD_ORIENTATION2);
+	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	  lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
 	  lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
 	  lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF); 		//aktualneA 52, aktualneB 67
 	  lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF); 		//aktualneA 72, aktualneB 87
 	  lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF); 		//aktualneA 92, aktualneB 107
-	lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(0, 0, 0)); //vykreslim sipku v prvej polozke
+	lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(0, 0, 0));
 }
 
 void initGPIO(){			// inicalizujem GPIO piny
@@ -144,7 +144,7 @@ void initGPIO(){			// inicalizujem GPIO piny
 
 }
 
-void dma_init(){  //inicializujem DMA1
+void dma_init(){
 	DMA_InitTypeDef       DMA_InitStruct;
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 	/* DMA1 Stream0 channel0 configuration **************************************/
