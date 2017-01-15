@@ -61,10 +61,10 @@ void DMA1_Channel1_IRQHandler(void)
   if (DMA_GetITStatus(DMA1_IT_TC1))
   {
 	  klavesnica = ADC1ConvertedValue[4];
-	  hodnota1 = ADC1ConvertedValue[0];
-	  hodnota2 = ADC1ConvertedValue[1];
-	  hodnota3 = ADC1ConvertedValue[2];
-	  hodnota4 = ADC1ConvertedValue[3];
+	  klapka = ADC1ConvertedValue[0];
+	  vyskovka = ADC1ConvertedValue[1];
+	  plyn = ADC1ConvertedValue[2];
+	  smerovka = ADC1ConvertedValue[3];
 
 	  DMA_ClearITPendingBit(DMA1_IT_TC1);
   }

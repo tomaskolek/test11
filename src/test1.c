@@ -2,7 +2,7 @@
  * test1.c
  *
  *  Created on: 2. 12. 2016
- *      Author: tomas
+ *      Author: ja
  */
 
 #include "test1.h"
@@ -24,7 +24,7 @@ void pohybMenu(uint16_t klavesnica){
 			posunSipkyHore();
 		}
 		else if ((klavesnica >= 2800) && (klavesnica <= 2940)){
-			if (aktualneA == 12){
+			if ((aktualneA == 0 && defaultA == 12) || aktualneA == 12){
 				otvorInfo();
 			}
 			else if (aktualneA == 32){
@@ -44,16 +44,18 @@ void pohybMenu(uint16_t klavesnica){
 			posunSipkyDole();
 		}
 	}
-	if ((klavesnica >= 3440) && (klavesnica <= 3480)){
-		lcdClearDisplay(decodeRgbValue(255, 255, 255));
-		lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
-		lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
-		lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF); 		//aktualneA 52, aktualneB 67
-		lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF); 		//aktualneA 72, aktualneB 87
-		lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF); 		//aktualneA 92, aktualneB 107
-		lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
-		subMenu = 0;
-	 }
+//	else if (subMenu == 1){
+		if ((klavesnica >= 3440) && (klavesnica <= 3480)){
+			lcdClearDisplay(decodeRgbValue(255, 255, 255));
+			lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
+			lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
+			lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF); 		//aktualneA 52, aktualneB 67
+			lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF); 		//aktualneA 72, aktualneB 87
+			lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF); 		//aktualneA 92, aktualneB 107
+			lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
+			subMenu = 0;
+		 }
+	//}
 }
 
 void posunSipkyDole(){

@@ -2,7 +2,7 @@
  * test1.h
  *
  *  Created on: 2. 12. 2016
- *      Author: tomas
+ *      Author: ja
  */
 
 #ifndef TEST1_H_
@@ -17,7 +17,7 @@ int16_t aktualneA;
 int16_t aktualneB;
 int subMenu;
 volatile uint16_t ADC1ConvertedValue[5]; //Stores converted vals
-volatile uint16_t hodnota1, hodnota2, hodnota3, hodnota4;
+volatile uint16_t klapka, vyskovka, plyn, smerovka;
 
 void initMenu();
 void Delay(uint16_t n);
@@ -35,5 +35,8 @@ void otvorMix();
 void otvorEPA();
 void adc2_init();
 char * prevodNaChar(uint16_t);
+char * FloatToString(float);
+char *FloatToStringReverz(float);
+float normalizuj(float ,float ,float );//normalizovanie hodnot od -1 do 1
 
 #endif /* TEST1_H_ */

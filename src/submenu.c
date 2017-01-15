@@ -2,9 +2,8 @@
  * submenu.c
  *
  *  Created on: 3. 12. 2016
- *      Author: tomas
+ *      Author: ja
  */
-
 
 #include "test1.h"
 #include "spi.h"
@@ -13,57 +12,201 @@
 #include "stm32l1xx.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
+float plynMIN=883, plynMAX=3135, vyskovkaMIN=568, vyskovkaMAX=3705, smerovkaMIN=487, smerovkaMAX=3128, klapkaMIN=496, klapkaMAX=3408;
+float plynNORM, plynNORMdiff, NORM, NORMdiff;
+int plynNORMint, plynNORMint2, NORMint, NORMint2;
+float klapkaNORM, vyskovkaNORM, smerovkaNORM, plynNORM, MIX;
 
-void otvorInfo(){
-	subMenu = 1;
-	char str[4];
-	lcdClearDisplay(decodeRgbValue(255, 255, 255));
-	//while(1){
-
-	/*if ((klavesnica >= 3440) && (klavesnica <= 3480)){
-		break;
-	}*/
-	sprintf(str,"%d", hodnota1);
-	lcdPutS(str, 23, 17, 0x0000, 0xFFFF);
-	sprintf(str,"%d", hodnota2);
-	lcdPutS(str, 23, 27, 0x0000, 0xFFFF);
-	sprintf(str,"%d", hodnota3);
-	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
-	sprintf(str,"%d", hodnota4);
-	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
-	//lcdFilledRectangle(20, 15, 20, 40, decodeRgbValue(31, 31, 31));
-	//}
+float normalizuj(float hodnota,float hodnotaMIN,float hodnotaMAX){ //normalizovanie hodnot od -1 do 1
+	NORM =(((hodnota-hodnotaMIN)/(hodnotaMAX-hodnotaMIN))*(1-(-1)))+(-1);
+	return NORM;
 }
 
-void otvorRevers(){
-	subMenu = 1;
-	lcdClearDisplay(decodeRgbValue(255, 255, 255));
-	lcdPutS("Otvoril som Revers",23, 17, 0x0000, 0xFFFF);
+char *FloatToString(float NORM){
+	NORMint=(int)NORM;
+	NORMdiff=NORM-(float)NORMint;
+	NORMint2=(int)(NORMdiff*100);
+	if (NORM < 0){
+		static char str[6];
+		if(NORMint2 < 10) sprintf(str,"-%d.%d", NORMint, abs(NORMint2));
+		else sprintf(str,"-%d.%d", NORMint, abs(NORMint2));
+			return str;
+		}
+	else{
+		static char str[5];
+		if(NORMint2 < 10) sprintf(str,"%d.0%d", NORMint, abs(NORMint2));
+		else sprintf(str,"%d.%d", NORMint, NORMint2);
+			return str;
+		}
 
-	lcdCircle(64, 84, 22, decodeRgbValue(31, 0, 0));
-	lcdCircle(64, 84, 30, decodeRgbValue(0, 31, 0));
-	lcdCircle(64, 84, 38, decodeRgbValue(0, 0, 31));
+}
+
+char *FloatToStringReverz(float NORM){
+	NORMint=(int)NORM;
+	NORMdiff=NORM-(float)NORMint;
+	NORMint2=(int)(NORMdiff*100);
+	if (NORM < 0){
+		static char str[6];
+		if(NORMint2 < 10) sprintf(str,"%d.%d", NORMint, abs(NORMint2));
+		else sprintf(str,"%d.%d", NORMint, abs(NORMint2));
+			return str;
+		}
+	else{
+		static char str[5];
+		if(NORMint2 < 10) sprintf(str,"-%d.0%d", NORMint, abs(NORMint2));
+		else sprintf(str,"-%d.%d", NORMint, NORMint2);
+			return str;
+		}
+
+}
+
+void otvorInfo(){ //funkcia, ktora po vyvolani zobrazi jednotlive kanaly
+	subMenu = 1;
+	char str[5];
+	lcdClearDisplay(decodeRgbValue(255, 255, 255)); //"vycisti display"
+	/*while(1){
+	if ((klavesnica >= 3440) && (klavesnica <= 3480)){
+		break;
+	}*/
+	lcdPutS("HODNOTY KANALOV",23, 17, 0x0000, 0xFFFF); //zobrazi na LCD
+
+	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX); //normalizovanie hodnoty z analogu
+	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM));
+	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);	//vypis na displej
+
+	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+	sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
+	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
+
+	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
+	sprintf(str,"Plyn: %s", FloatToString(plynNORM));
+	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+
+	smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
+	sprintf(str,"Smerovka: %s", FloatToString(smerovkaNORM));
+	lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+}
+
+//DOROBIT
+void otvorRevers(){ //funkcia na revers hodnot analogov
+	subMenu = 1;
+	char str[5];
+	lcdClearDisplay(decodeRgbValue(255, 255, 255));
+	lcdPutS("REVERS",23, 17, 0x0000, 0xFFFF);
+
+	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX);
+	sprintf(str,"Klapka: %s", FloatToStringReverz(klapkaNORM));
+	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+
+	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+	sprintf(str,"Vyskovka: %s", FloatToStringReverz(vyskovkaNORM));
+	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
+
+	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
+	sprintf(str,"Plyn: %s", FloatToStringReverz(plynNORM));
+	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+
+	smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
+	sprintf(str,"Smerovka: %s", FloatToStringReverz(smerovkaNORM));
+	lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
 }
 
 void otvorExpo(){
 	subMenu = 1;
+	char str[5];
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
-	lcdPutS("Otvoril som Expo",23, 17, 0x0000, 0xFFFF);
+	lcdPutS("Aktivne EXPO",23, 17, 0x0000, 0xFFFF);
+
+	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX);
+	if(klapkaNORM<0){
+		klapkaNORM = exp2(klapkaNORM*(-1))-1;
+		klapkaNORM = klapkaNORM*(-1);
+	}
+	else{klapkaNORM = exp2(klapkaNORM)-1;}
+	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM));
+	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+
+	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+	if(vyskovkaNORM<0){
+		vyskovkaNORM = exp2(vyskovkaNORM*(-1))-1;
+		vyskovkaNORM = vyskovkaNORM*(-1);
+	}
+	else{vyskovkaNORM = exp2(vyskovkaNORM)-1;
+	klapkaNORM = klapkaNORM*(-1);}
+	sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
+	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
+
+	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
+	if(plynNORM<0){
+		plynNORM = exp2(plynNORM*(-1))-1;
+		plynNORM = plynNORM*(-1);
+	}
+	else{plynNORM = exp2(plynNORM)-1;}
+	sprintf(str,"Plyn: %s", FloatToString(plynNORM));
+	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+
+	smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
+	if(smerovkaNORM<0){
+		smerovkaNORM = exp2(smerovkaNORM*(-1))-1;
+		smerovkaNORM = smerovkaNORM*(-1);
+	}
+	else{smerovkaNORM = exp2(smerovkaNORM)-1;}
+	sprintf(str,"Smerovka: %s", FloatToString(smerovkaNORM));
+	lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
 }
 
-void otvorMix(){
+void otvorMix(){ //funkcia na mixovanie kanalov, vahy: vyskovka 50%, klapky 50%
 	subMenu = 1;
+	float vahaVyskovky = 0.5;
+	float vahaKlapky = 0.5;
+	char str[5];
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
-	lcdPutS("Otvoril som Mix",23, 17, 0x0000, 0xFFFF);
+	lcdPutS("MIX 50%",23, 17, 0x0000, 0xFFFF);
+
+	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX);
+	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+
+	if(vyskovkaNORM>0){
+		if(klapkaNORM>0){
+			MIX = klapkaNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+			sprintf(str,"Servo: %s", FloatToString(MIX));
+			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+		}
+		else{
+		MIX = vyskovkaNORM*vahaVyskovky + klapkaNORM*vahaKlapky;
+		sprintf(str,"Servo: %s", FloatToString(MIX));
+		lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+		}
+	}
+	else{
+		if(klapkaNORM>0){
+			MIX = klapkaNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+			sprintf(str,"Servo: %s", FloatToString(MIX));
+			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+		}
+		else{
+		MIX = klapkaNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+		sprintf(str,"Servo: %s", FloatToString(MIX));
+		lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+		}
+	}
+	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
+	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM));
+	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
+	sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
+	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+	sprintf(str,"Plyn: %s", FloatToString(plynNORM));
+	lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
 }
 
 void otvorEPA(){
 	subMenu = 1;
+	char str[5];
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
-	lcdPutS("Otvoril som EPA",23, 17, 0x0000, 0xFFFF);
+	lcdPutS("EPA",23, 17, 0x0000, 0xFFFF);
 }
-
 
 char * prevodNaChar(uint16_t hodnota){
 	static char str[4];
