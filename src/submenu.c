@@ -14,10 +14,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-float plynMIN=883, plynMAX=3135, vyskovkaMIN=568, vyskovkaMAX=3705, smerovkaMIN=487, smerovkaMAX=3128, klapkaMIN=496, klapkaMAX=3408;
+float plynMIN=883, plynMAX=3135, vyskovkaMIN=568, vyskovkaMAX=3705, smerovkaMIN=487, smerovkaMAX=3128, kridielkoMIN=496, kridielkoMAX=3408;
 float plynNORM, plynNORMdiff, NORM, NORMdiff;
 int plynNORMint, plynNORMint2, NORMint, NORMint2;
-float klapkaNORM, vyskovkaNORM, smerovkaNORM, plynNORM, MIX;
+float kridielkoNORM, vyskovkaNORM, smerovkaNORM, plynNORM, MIX, trim=0;
 
 float normalizuj(float hodnota,float hodnotaMIN,float hodnotaMAX){ //normalizovanie hodnot od -1 do 1
 	NORM =(((hodnota-hodnotaMIN)/(hodnotaMAX-hodnotaMIN))*(1-(-1)))+(-1);
@@ -65,15 +65,15 @@ char *FloatToStringReverz(float NORM){
 void otvorInfo(){ //funkcia, ktora po vyvolani zobrazi jednotlive kanaly, hodnoty su normalizovane, rozsah -1 az 1
 	subMenu = 1;
 	char str[5];
-	lcdClearDisplay(decodeRgbValue(255, 255, 255)); //"vycisti display"
+	lcdClearDisplay(decodeRgbValue(255, 255, 255)); //"vycisti" display
 	/*while(1){
 	if ((klavesnica >= 3440) && (klavesnica <= 3480)){
 		break;
 	}*/
 	lcdPutS("HODNOTY KANALOV",23, 17, 0x0000, 0xFFFF); //zobrazi na LCD
 
-	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX); //normalizovanie hodnoty z analogu
-	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM)); //prevod cisla na char
+	kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX); //normalizovanie hodnoty z analogu
+	sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM)); //prevod cisla na char
 	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);	//vypis na displej
 
 	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
@@ -96,8 +96,8 @@ void otvorRevers(){ //funkcia na revers hodnot analogov
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("REVERS",23, 17, 0x0000, 0xFFFF);
 
-	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX);
-	sprintf(str,"Klapka: %s", FloatToStringReverz(klapkaNORM));
+	kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
+	sprintf(str,"kridielko: %s", FloatToStringReverz(kridielkoNORM));
 	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
 
 	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
@@ -119,13 +119,13 @@ void otvorExpo(){
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("Aktivne EXPO",23, 17, 0x0000, 0xFFFF);
 
-	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX);
-	if(klapkaNORM<0){
-		klapkaNORM = exp2(klapkaNORM*(-1))-1;
-		klapkaNORM = klapkaNORM*(-1);
+	kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
+	if(kridielkoNORM<0){
+		kridielkoNORM = exp2(kridielkoNORM*(-1))-1;
+		kridielkoNORM = kridielkoNORM*(-1);
 	}
-	else{klapkaNORM = exp2(klapkaNORM)-1;}
-	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM));
+	else{kridielkoNORM = exp2(kridielkoNORM)-1;}
+	sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM));
 	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
 
 	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
@@ -134,7 +134,7 @@ void otvorExpo(){
 		vyskovkaNORM = vyskovkaNORM*(-1);
 	}
 	else{vyskovkaNORM = exp2(vyskovkaNORM)-1;
-	klapkaNORM = klapkaNORM*(-1);}
+	kridielkoNORM = kridielkoNORM*(-1);}
 	sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
 	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
 
@@ -165,35 +165,35 @@ void otvorMix(){ //funkcia na mixovanie kanalov, vahy: vyskovka 50%, klapky 50%
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("MIX 50%",23, 17, 0x0000, 0xFFFF);
 
-	klapkaNORM = normalizuj((float)klapka,klapkaMIN,klapkaMAX);
+	kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
 	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
 
 	if(vyskovkaNORM>0){
-		if(klapkaNORM>0){
-			MIX = klapkaNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+		if(kridielkoNORM>0){
+			MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
 			sprintf(str,"Servo: %s", FloatToString(MIX));
 			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
 		}
 		else{
-		MIX = vyskovkaNORM*vahaVyskovky + klapkaNORM*vahaKlapky;
+		MIX = vyskovkaNORM*vahaVyskovky + kridielkoNORM*vahaKlapky;
 		sprintf(str,"Servo: %s", FloatToString(MIX));
 		lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
 		}
 	}
 	else{
-		if(klapkaNORM>0){
-			MIX = klapkaNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+		if(kridielkoNORM>0){
+			MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
 			sprintf(str,"Servo: %s", FloatToString(MIX));
 			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
 		}
 		else{
-		MIX = klapkaNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+		MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
 		sprintf(str,"Servo: %s", FloatToString(MIX));
 		lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
 		}
 	}
 	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
-	sprintf(str,"Klapka: %s", FloatToString(klapkaNORM));
+	sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM));
 	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
 	sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
 	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
@@ -204,6 +204,21 @@ void otvorMix(){ //funkcia na mixovanie kanalov, vahy: vyskovka 50%, klapky 50%
 void otvorEPA(){
 	subMenu = 1;
 	char str[5];
+	lcdClearDisplay(decodeRgbValue(255, 255, 255));
+	lcdPutS("TRIMOVANIE",23, 17, 0x0000, 0xFFFF); //zobrazi na LCD
+
+	if((klavesnica >= 2800) && (klavesnica <= 2940)){	//+
+		trim++;
+	}
+	if((klavesnica >= 3440) && (klavesnica <= 3480)){		//-
+		trim--;
+	}
+
+	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX) + trim;
+
+	sprintf(str,"Plyn: %s", FloatToString(plynNORM));
+	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
 	lcdPutS("EPA",23, 17, 0x0000, 0xFFFF);
 }

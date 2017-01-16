@@ -17,7 +17,7 @@ int16_t aktualneA;
 int16_t aktualneB;
 int subMenu;
 volatile uint16_t ADC1ConvertedValue[5]; //Stores converted vals
-volatile uint16_t klapka, vyskovka, plyn, smerovka;
+volatile uint16_t kridielko, vyskovka, plyn, smerovka;
 
 void initMenu();
 void Delay(uint16_t n);

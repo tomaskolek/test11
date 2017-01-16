@@ -61,7 +61,7 @@ void DMA1_Channel1_IRQHandler(void) 	//ked dojde k preruseniu, hodnoty z ADC sa 
   if (DMA_GetITStatus(DMA1_IT_TC1))
   {
 	  klavesnica = ADC1ConvertedValue[4];
-	  klapka = ADC1ConvertedValue[0];
+	  kridielko = ADC1ConvertedValue[0];
 	  vyskovka = ADC1ConvertedValue[1];
 	  plyn = ADC1ConvertedValue[2];
 	  smerovka = ADC1ConvertedValue[3];
