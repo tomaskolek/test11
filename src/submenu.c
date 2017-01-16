@@ -71,23 +71,30 @@ void otvorInfo(){	//funkcia, ktora po vyvolani zobrazi jednotlive kanaly, hodnot
 				break;
 			}
 		else{
-		lcdPutS("HODNOTY KANALOV",23, 17, 0x0000, 0xFFFF);	//zobrazi na LCD
+			lcdPutS("HODNOTY KANALOV",23, 17, 0x0000, 0xFFFF);	//zobrazi na LCD
 
-		kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);	//normalizovanie hodnoty z analogu
-		sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM));	//prevod cisla na char
-		lcdPutS(str, 23, 37, 0x0000, 0xFFFF);	//vypis na displej
+			kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);	//normalizovanie hodnoty z analogu
+			sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM));	//prevod cisla na char
+			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);	//vypis na displej
 
-		vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
-		sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
-		lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
+			vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+			sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
+			lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
 
-		plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
-		sprintf(str,"Plyn: %s", FloatToString(plynNORM));
-		lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+			plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
+			sprintf(str,"Plyn: %s", FloatToString(plynNORM));
+			lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
 
-		smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
-		sprintf(str,"Smerovka: %s", FloatToString(smerovkaNORM));
-		lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+			smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
+			sprintf(str,"Smerovka: %s", FloatToString(smerovkaNORM));
+			lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+
+			if (zapnutyMix == 1){
+				sprintf(str,"Mix v. %d%% k. %d%%", (int) vahaVyskovky*100, (int) vahaKlapky*100); //nechce vypisovat integer
+				lcdPutS(str, 23, 80, 0x0000, 0xFFFF);
+				sprintf(str,"Mix: %s", FloatToString(mixujem(kridielkoNORM, vyskovkaNORM)));
+				lcdPutS(str, 23, 90, 0x0000, 0xFFFF);
+			}
 		}
 	}
 	return;
@@ -102,23 +109,31 @@ void otvorRevers(){	//funkcia na revers hodnot analogov
 				break;
 			}
 		else{
-	lcdPutS("REVERS",23, 17, 0x0000, 0xFFFF);
+			lcdPutS("REVERS",23, 17, 0x0000, 0xFFFF);
 
-	kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
-	sprintf(str,"kridielko: %s", FloatToStringReverz(kridielkoNORM));
-	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+			kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
+			sprintf(str,"kridielko: %s", FloatToStringReverz(kridielkoNORM));
+			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
 
-	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
-	sprintf(str,"Vyskovka: %s", FloatToStringReverz(vyskovkaNORM));
-	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
+			vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+			sprintf(str,"Vyskovka: %s", FloatToStringReverz(vyskovkaNORM));
+			lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
 
-	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
-	sprintf(str,"Plyn: %s", FloatToStringReverz(plynNORM));
-	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+			plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
+			sprintf(str,"Plyn: %s", FloatToStringReverz(plynNORM));
+			lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
 
-	smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
-	sprintf(str,"Smerovka: %s", FloatToStringReverz(smerovkaNORM));
-	lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+			smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
+			sprintf(str,"Smerovka: %s", FloatToStringReverz(smerovkaNORM));
+			lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+
+			if (zapnutyMix == 1) {
+
+				sprintf(str,"Mix: %s", FloatToStringReverz(smerovkaNORM));
+				lcdPutS(str, 23, 77, 0x0000, 0xFFFF);
+
+			}
+
 		}
 	}
 }
@@ -130,98 +145,112 @@ void otvorExpo(){
 	while(subMenu==1){
 		if((klavesnica >= 3200) && (klavesnica <= 3440)){	//-
 				break;
-			}
+		}
 		else{
-	lcdPutS("Aktivne EXPO",23, 17, 0x0000, 0xFFFF);
+			lcdPutS("Aktivne EXPO",23, 17, 0x0000, 0xFFFF);
 
-	kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
-	if(kridielkoNORM<0){
-		kridielkoNORM = exp2(kridielkoNORM*(-1))-1;		//vypocet exponencialnej funkcii 2^x; x je ciselny vstup do funkcie
-		kridielkoNORM = kridielkoNORM*(-1);
-	}
-	else{kridielkoNORM = exp2(kridielkoNORM)-1;}
-	sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM));
-	lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
-
-	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
-	if(vyskovkaNORM<0){
-		vyskovkaNORM = exp2(vyskovkaNORM*(-1))-1;
-		vyskovkaNORM = vyskovkaNORM*(-1);
-	}
-	else{vyskovkaNORM = exp2(vyskovkaNORM)-1;
-	kridielkoNORM = kridielkoNORM*(-1);}
-	sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
-	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
-
-	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
-	if(plynNORM<0){
-		plynNORM = exp2(plynNORM*(-1))-1;
-		plynNORM = plynNORM*(-1);
-	}
-	else{plynNORM = exp2(plynNORM)-1;}
-	sprintf(str,"Plyn: %s", FloatToString(plynNORM));
-	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
-
-	smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
-	if(smerovkaNORM<0){
-		smerovkaNORM = exp2(smerovkaNORM*(-1))-1;
-		smerovkaNORM = smerovkaNORM*(-1);
-	}
-	else{smerovkaNORM = exp2(smerovkaNORM)-1;}
-	sprintf(str,"Smerovka: %s", FloatToString(smerovkaNORM));
-	lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+			kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
+			if(kridielkoNORM<0){
+				kridielkoNORM = exp2(kridielkoNORM*(-1))-1;		//vypocet exponencialnej funkcii 2^x; x je ciselny vstup do funkcie
+				kridielkoNORM = kridielkoNORM*(-1);
 			}
+			else{
+				kridielkoNORM = exp2(kridielkoNORM)-1;
+			}
+			sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM));
+			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
+
+			vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+			if(vyskovkaNORM<0){
+				vyskovkaNORM = exp2(vyskovkaNORM*(-1))-1;
+				vyskovkaNORM = vyskovkaNORM*(-1);
+			}
+			else{
+				vyskovkaNORM = exp2(vyskovkaNORM)-1;
+				kridielkoNORM = kridielkoNORM*(-1);
+			}
+			sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
+			lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
+
+			plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
+			if(plynNORM<0){
+				plynNORM = exp2(plynNORM*(-1))-1;
+				plynNORM = plynNORM*(-1);
+			}
+			else{
+				plynNORM = exp2(plynNORM)-1;
+			}
+			sprintf(str,"Plyn: %s", FloatToString(plynNORM));
+			lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
+
+			smerovkaNORM = normalizuj((float)smerovka,smerovkaMIN,smerovkaMAX);
+			if(smerovkaNORM<0){
+				smerovkaNORM = exp2(smerovkaNORM*(-1))-1;
+				smerovkaNORM = smerovkaNORM*(-1);
+			}
+			else{
+				smerovkaNORM = exp2(smerovkaNORM)-1;
+			}
+			sprintf(str,"Smerovka: %s", FloatToString(smerovkaNORM));
+			lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+		}
 	}
 }
 
 void otvorMix(){	//funkcia na mixovanie kanalov, vahy: vyskovka 50%, klapky 50%
 	subMenu = 1;
-	float vahaVyskovky = 0.5;
-	float vahaKlapky = 0.5;
-	char str[5];
+	//char str[5];
 	lcdClearDisplay(decodeRgbValue(255, 255, 255));
-	while(subMenu==1){
+	aktualneA = defaultA + 20;
+	aktualneB = defaultB + 20;
+	lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));	//vykreslim sipku v prvej polozke
+
+	while(subMenu == 1){
 		if((klavesnica >= 3200) && (klavesnica <= 3440)){	//-
 				break;
 			}
 		else{
-	lcdPutS("MIX 50%",23, 17, 0x0000, 0xFFFF);
+			lcdPutS("Vyskovka  Klapky ",20, 17, 0x0000, 0xFFFF);
+			lcdPutS("MIX:  50%   50%",20, 37, 0x0000, 0xFFFF);
+			lcdPutS("MIX:  25%   75%",20, 57, 0x0000, 0xFFFF);
+			lcdPutS("MIX:  75%   25%",20, 77, 0x0000, 0xFFFF);
+			lcdPutS("Vypnut Mix",20, 97, 0x0000, 0xFFFF);
 
-	kridielkoNORM = normalizuj((float)kridielko,kridielkoMIN,kridielkoMAX);
-	vyskovkaNORM = normalizuj((float)vyskovka,vyskovkaMIN,vyskovkaMAX);
+			//lcdPlnyTrojuholnik(5, defaultA, defaultB, decodeRgbValue(0, 0, 0));	//vykreslim sipku v prvej polozke
+			if ((klavesnica >= 1800) && (klavesnica <= 2100)){ //posun v menu smerom nahor sipkou na klavesnici
+						posunSipkyHore(); //posuvanie sipky (trojuholniku) na displeji smerom hore
+					}
 
-	if(vyskovkaNORM>0){
-		if(kridielkoNORM>0){
-			MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;		//vypocet mixov
-			sprintf(str,"Servo: %s", FloatToString(MIX));
-			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
-		}
-		else{
-		MIX = vyskovkaNORM*vahaVyskovky + kridielkoNORM*vahaKlapky;
-		sprintf(str,"Servo: %s", FloatToString(MIX));
-		lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
-		}
-	}
-	else{
-		if(kridielkoNORM>0){
-			MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
-			sprintf(str,"Servo: %s", FloatToString(MIX));
-			lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
-		}
-		else{
-		MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
-		sprintf(str,"Servo: %s", FloatToString(MIX));
-		lcdPutS(str, 23, 37, 0x0000, 0xFFFF);
-		}
-	}
-	plynNORM = normalizuj((float)plyn,plynMIN,plynMAX);
-	sprintf(str,"kridielko: %s", FloatToString(kridielkoNORM));
-	lcdPutS(str, 23, 47, 0x0000, 0xFFFF);
-	sprintf(str,"Vyskovka: %s", FloatToString(vyskovkaNORM));
-	lcdPutS(str, 23, 57, 0x0000, 0xFFFF);
-	sprintf(str,"Plyn: %s", FloatToString(plynNORM));
-	lcdPutS(str, 23, 67, 0x0000, 0xFFFF);
+			else if ((klavesnica >= 3450) && (klavesnica <= 3600)){
+				posunSipkyDole(); //posuvanie sipky (trojuholniku) na displeji smerom dole
 			}
+			else if ((klavesnica >= 2600) && (klavesnica <= 3000)){  //volba vah
+				if (aktualneA == 32){
+					vahaVyskovky = 0.5;
+					vahaKlapky = 0.5;
+					zapnutyMix = 1;
+					break;
+				}
+				else if (aktualneA == 52){
+					vahaVyskovky = 0.25;
+					vahaKlapky = 0.75;
+					zapnutyMix = 1;
+					break;
+				}
+				else if (aktualneA == 72){
+					vahaVyskovky = 0.75;
+					vahaKlapky = 0.25;
+					zapnutyMix = 1;
+					break;
+				}
+				else if (aktualneA == 92){
+					vahaVyskovky = 1;
+					vahaKlapky = 1;
+					zapnutyMix = 0;
+					break;
+				}
+			}
+		}
 	}
 }
 

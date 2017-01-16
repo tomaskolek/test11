@@ -5,11 +5,11 @@
  *      Author: ja
  */
 
-#include "test1.h"
-#include "spi.h"
-#include "ili9163.h"
-#include <stddef.h>
-#include "stm32l1xx.h"
+//#include "test1.h"
+//#include "spi.h"
+//#include "ili9163.h"
+//#include <stddef.h>
+//#include "stm32l1xx.h"
 
 void Delay(uint16_t n)  //funkcia pre spomalenie
 {

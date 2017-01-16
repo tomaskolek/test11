@@ -15,9 +15,11 @@ int16_t defaultA;
 int16_t defaultB;
 int16_t aktualneA;
 int16_t aktualneB;
-int subMenu;
+int subMenu, zapnutyMix;
 volatile uint16_t ADC1ConvertedValue[5]; //Stores converted vals
 volatile uint16_t kridielko, vyskovka, plyn, smerovka;
+float vahaVyskovky;
+float vahaKlapky;
 
 void initMenu();
 void Delay(uint16_t n);
@@ -36,7 +38,8 @@ void otvorEPA();
 void adc2_init();
 char * prevodNaChar(uint16_t);
 char * FloatToString(float);
-char *FloatToStringReverz(float);
+char * FloatToStringReverz(float);
 float normalizuj(float ,float ,float );//normalizovanie hodnot od -1 do 1
+float mixujem(float, float);
 
 #endif /* FUNKCIE_H_ */

@@ -45,14 +45,16 @@ void pohybMenu(uint16_t klavesnica){  //funkcia, ktora sleduje zvolene polozky v
 		}
 	}
 		if ((klavesnica >= 3200) && (klavesnica <= 3440)){  //opustenie submenu a navrat do hlavneho menu (klavesa minus)
-			lcdClearDisplay(decodeRgbValue(255, 255, 255));
-			lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
-			lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
-			lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF); 		//aktualneA 52, aktualneB 67
-			lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF); 		//aktualneA 72, aktualneB 87
-			lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF); 		//aktualneA 92, aktualneB 107
-			lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
-			subMenu = 0;
+			if (subMenu == 1){
+				lcdClearDisplay(decodeRgbValue(255, 255, 255));
+				lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
+				lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
+				lcdPutS("Expo", 20, 57, 0x0000, 0xFFFF); 		//aktualneA 52, aktualneB 67
+				lcdPutS("Mix", 20, 77, 0x0000, 0xFFFF); 		//aktualneA 72, aktualneB 87
+				lcdPutS("EPA", 20, 97, 0x0000, 0xFFFF); 		//aktualneA 92, aktualneB 107
+				lcdPlnyTrojuholnik(5, aktualneA, aktualneB, decodeRgbValue(0, 0, 0));
+				subMenu = 0;
+			}
 		 }
 }
 
@@ -104,6 +106,7 @@ void initMenu(){	//zobrazi sa hlavne menu a vypisu sa polozky
 	aktualneA = 0;
 	aktualneB = 0;
 	subMenu = 0;
+	zapnutyMix = 0;
 	lcdInitialise(LCD_ORIENTATION2);	//menim orientaciu displeja
 	lcdClearDisplay(decodeRgbValue(255, 255, 255)); 	//mazem obrazovku a nastavim biele pozadie
 	  lcdPutS("Info", 20, 17, 0x0000, 0xFFFF);			//aktualneA 12, aktualneB 27
@@ -208,4 +211,26 @@ void nvic_init(){		// inicializacia prerusenia pre ADC
     ADC_DMACmd(ADC1, ENABLE);
 
 }
+
+float mixujem(float kridielkoNORM, float vyskovkaNORM){
+	float MIX;
+	if(vyskovkaNORM>0){
+		if(kridielkoNORM>0){
+			MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;		//vypocet mixov
+		}
+		else{
+			MIX = vyskovkaNORM*vahaVyskovky + kridielkoNORM*vahaKlapky;
+		}
+	}
+	else{
+		if(kridielkoNORM>0){
+			MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+		}
+		else{
+			MIX = kridielkoNORM*vahaKlapky + vyskovkaNORM*vahaVyskovky;
+		}
+	}
+	return MIX;
+}
+
 
