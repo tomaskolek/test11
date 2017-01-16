@@ -27,9 +27,9 @@ SOFTWARE.
 */
 
 /* Includes */
+#include <funkcie.h>
 #include <stddef.h>
 #include "stm32l1xx.h"
-#include "test1.h"
 #include "spi.h"
 #include "ili9163.h"
 
