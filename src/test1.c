@@ -20,10 +20,10 @@ void Delay(uint16_t n)  //funkcia pre spomalenie
 
 void pohybMenu(uint16_t klavesnica){  //funkcia, ktora sleduje zvolene polozky v menu uzivatelom
 	if (subMenu == 0){  //ochrana aby sa nedalo pohybovat v menu ked uz je otvorene niektore submenu
-		if ((klavesnica >= 1952) && (klavesnica <= 2100)){ //posun v menu smerom nahor sipkou na klavesnici
+		if ((klavesnica >= 1800) && (klavesnica <= 2100)){ //posun v menu smerom nahor sipkou na klavesnici
 			posunSipkyHore(); //posuvanie sipky (trojuholniku) na displeji smerom hore
 		}
-		else if ((klavesnica >= 2800) && (klavesnica <= 2940)){  //vstup do submenu
+		else if ((klavesnica >= 2600) && (klavesnica <= 3000)){  //vstup do submenu
 			if ((aktualneA == 0 && defaultA == 12) || aktualneA == 12){
 				otvorInfo();
 			}
@@ -40,12 +40,12 @@ void pohybMenu(uint16_t klavesnica){  //funkcia, ktora sleduje zvolene polozky v
 				otvorEPA();
 			}
 		}
-		else if ((klavesnica >= 3630) && (klavesnica <= 3690)){
+		else if ((klavesnica >= 3450) && (klavesnica <= 3600)){
 			posunSipkyDole(); //posuvanie sipky (trojuholniku) na displeji smerom dole
 		}
 	}
 //	else if (subMenu == 1){
-		if ((klavesnica >= 3440) && (klavesnica <= 3480)){  //opustenie submenu a navrat do hlavneho menu (klavesa minus)
+		if ((klavesnica >= 3200) && (klavesnica <= 3440)){  //opustenie submenu a navrat do hlavneho menu (klavesa minus)
 			lcdClearDisplay(decodeRgbValue(255, 255, 255));
 			lcdPutS("Info", 20, 17, 0x0000, 0xFFFF); 		//aktualneA 12, aktualneB 27
 			lcdPutS("Revers", 20, 37, 0x0000, 0xFFFF); 	//aktualneA 32, aktualneB 47
