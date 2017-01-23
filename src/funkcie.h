@@ -10,6 +10,7 @@
 
 
 #include <stdint.h>
+#include <stdbool.h>
 volatile uint16_t klavesnica;
 int16_t defaultA;
 int16_t defaultB;
@@ -29,6 +30,8 @@ void initGPIO();
 void dma_init();
 void posunSipkyDole();
 void posunSipkyHore();
+void posunSipkyDole2();
+void posunSipkyHore2();
 void pohybMenu(uint16_t);
 void otvorInfo();
 void otvorRevers();
@@ -39,7 +42,10 @@ void adc2_init();
 char * prevodNaChar(uint16_t);
 char * FloatToString(float);
 char * FloatToStringReverz(float);
-float normalizuj(float ,float ,float );//normalizovanie hodnot od -1 do 1
+float normalizuj(float ,float ,float, bool, bool, float);//normalizovanie hodnot od -1 do 1
 float mixujem(float, float);
+float TRIMfunc(float , char *);
+int FloatToInt(float);
+int FloatToInt2(float);
 
 #endif /* FUNKCIE_H_ */
